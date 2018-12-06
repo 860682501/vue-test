@@ -3,8 +3,7 @@
     <p>{{msg}}</p>
 
     <div>
-      <!-- bidirectional data binding（双向数据绑定）
-           @blur - 失去焦点
+      <!-- @blur - 失去焦点
            @focus - 获得焦点时
            @ready - 在文档加载后激活函数
        -->
@@ -54,7 +53,7 @@
             :multiple="true"
             :show-file-list="false"
             :file-list="fileList3"
-            :http-request="uploadSectionFile">
+            :http-request="uploadSectionFile"> <!-- http-request覆盖默认的上传行为，可以自定义上传的实现 -->
           <el-button size="small" type="primary" ref='uploadButton'>点击上传</el-button>
           <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
         </el-upload>
@@ -75,14 +74,14 @@
 </template>
 
 <script>
-/* 引入插件 */
+/* 引入Quill插件 */
 import Quill from 'quill'
 // import { someModule } from '../yourModulePath/someQuillModule.js'
 // Quill.register('modules/someModule', someModule)
 import ImageResize from 'quill-image-resize-module'
-import { ImageDrop } from 'quill-image-drop-module'
+// import { ImageDrop } from 'quill-image-drop-module' // 没用到
 Quill.register('modules/imageResize', ImageResize)
-Quill.register('modules/imageDrop', ImageDrop)
+// Quill.register('modules/imageDrop', ImageDrop)
 
 export default {
   name: 'ckeditor-test',
@@ -184,6 +183,7 @@ export default {
     },
 
     tryToSubmitPic() {
+      // 没有用到
       listBuckets()
     },
 
@@ -232,11 +232,8 @@ export default {
 
         this.imgUrl = result.url
 
-        this.editor.insertEmbed(
-          this.editor.getSelection().index,
-          'image',
-          this.imgUrl
-        )
+        // -------------------------------------------Quill添加图片-----------------------------------------------------
+        this.editor.insertEmbed(this.editor.getSelection().index,'image',this.imgUrl)
         
       } catch (e) {
         console.log('OSS2--------' + e)
